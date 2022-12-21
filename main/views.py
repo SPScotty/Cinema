@@ -20,14 +20,14 @@ from .serializers import GenreSerializer, MovieSerializer
 #     serializer = MovieSerializer(movies, many=True)
 #     return Response({'movies':serializer.data})
 
-# @api_view(['POST'])
-# def post_movie(request):
-#     print(request.data)
-#     movie = request.data
-#     serializer = MovieSerializer(data=movie)
-#     if serializer.is_valid(raise_exception=True):
-#         post_saved = serializer.save()
-#     return Response(serializer.data)
+@api_view(['POST'])
+def post_movie(request):
+    print(request.data)
+    movie = request.data
+    serializer = MovieSerializer(data=movie)
+    if serializer.is_valid(raise_exception=True):
+        post_saved = serializer.save()
+    return Response(serializer.data)
 
 class GenreListView(generics.ListAPIView):
     queryset = Genre.objects.all()
