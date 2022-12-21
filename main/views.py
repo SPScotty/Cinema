@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
 
-from .models import Genre, Movie
+from .models import Genre, Movie, MoviePoster
 from .serializers import GenreSerializer, MovieSerializer
 
 # @api_view(['GET'])
@@ -49,5 +49,11 @@ class MovieDeleteView(generics.DestroyAPIView):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
 
+# class PostImageView(generics.ListAPIView):
+#     queryset = MoviePoster.objects.all()
+#     serializer_class = MoviePosterSerializer
+
+#     def get_serializer_context(self):
+#         return {'request':self.request}
 
 
