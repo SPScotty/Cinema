@@ -22,4 +22,6 @@ class Movie(models.Model):
 
 class MoviePoster(models.Model):
     poster = models.ImageField(upload_to='movies', blank=True, null=True)
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='posters')
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='images')
+
+    
