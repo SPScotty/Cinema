@@ -8,7 +8,7 @@ from django.shortcuts import render
 
 
 from .models import Genre, Movie, MoviePoster, Video
-from .serializers import GenreSerializer, MovieSerializer, MoviePosterSerializer
+from .serializers import GenreSerializer, MovieSerializer, MoviePosterSerializer, VideoSerializer
 
 
 
@@ -18,6 +18,10 @@ def index(request):
     video=Video.objects.all()
     return render(request,"index.html",{"video":video})
 
+
+class VideoViewSet(generics.ListAPIView):
+    queryset = Video.objects.all()
+    serializer_class = VideoSerializer
 
 
 class GenreListView(generics.ListAPIView):

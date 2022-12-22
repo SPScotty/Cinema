@@ -21,7 +21,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
 
-from main.views import GenreListView, MovieViewSet, PosterViewSet
+from main.views import GenreListView, MovieViewSet, PosterViewSet, VideoViewSet
 
 swagger_view = get_schema_view(
     openapi.Info(
@@ -52,6 +52,7 @@ destroy --------> movies/id/ DELETE
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth', include('rest_framework.urls')),
+    path('trailers/', VideoViewSet.as_view()),
     path('v1/api/genres/', GenreListView.as_view()),
     path('v1/api/add-image/', PosterViewSet.as_view()),
     path('v1/api/', include(router.urls)),

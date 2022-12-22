@@ -17,9 +17,15 @@ class MovieSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation['images'] = MoviePosterSerializer(instance.images.all(), 
-            many=True, context=self.context).data
+            many=True, context=self.context).data,
+        representation['video'] = VideoSerializer(instance.videos.all(), many = True, context=self.context).data
         return representation
 
+
+class VideoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Video
+        fields = '__all__'
 
     
 class MoviePosterSerializer(serializers.ModelSerializer):
