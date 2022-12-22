@@ -26,7 +26,6 @@ class MyUserManager(BaseUserManager):
 
 
 class MyUser(AbstractUser):
-   
     username = None
     email = models.EmailField(unique=True)
     is_active = models.BooleanField(default=False)

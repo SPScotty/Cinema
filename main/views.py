@@ -1,8 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Like, Favorite
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
+from django.shortcuts import redirect, get_object_or_404
 
 from .models import Genre, Movie, MoviePoster
 from .serializers import GenreSerializer, MovieSerializer
@@ -56,4 +58,15 @@ class MovieDeleteView(generics.DestroyAPIView):
 #     def get_serializer_context(self):
 #         return {'request':self.request}
 
-
+@api_view(['POST'])
+def like_movie(request, movie_id):
+    movie = get_object_or_404(Movie, pk=movie_id)
+    like, created = Like.objects.get_or_create(user=request.user, movie=movie)
+    if not created:
+        like.delete()
+    return redirect('movies:detail', movie_id=movie_id)
+@api_view(['POST'])
+def add_to_favorites(request, movie_id):
+    movie = get_object_or_404(Movie, pk=movie_id)
+    favorite, created = Favorite.objects.get_or_create(user=request.user, movie=movie)
+    return redirect('movies:detail', movie_id=movie_id)

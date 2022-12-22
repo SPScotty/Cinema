@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework_simplejwt',
+    'drf_yasg',
 
     'account',
     'main',
@@ -86,7 +87,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'movie_db',
-        'USER': 'vivobook',
+        'USER': 'daniel',
         'PASSWORD':'1' , 
         'HOST': 'localhost',
         'PORT': 5432

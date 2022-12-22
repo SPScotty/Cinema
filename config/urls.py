@@ -19,7 +19,7 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 
 
-schema_view = get_schema_view(
+swagger_view = get_schema_view(
     openapi.Info(
         title="Python 23 API",
         description="makers bootcamp",
@@ -31,6 +31,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('main.urls')),
+    path('docs/', swagger_view.with_ui('swagger', cache_timeout=0)),
 ]
 
 
