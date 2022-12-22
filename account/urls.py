@@ -1,6 +1,8 @@
-from account.views import RegisterView
-from django.urls import path, include
+from django.urls import path
+from .views import RegisterUserView, activate_view
+
 
 urlpatterns = [
-    path('register/', RegisterView.as_view())
+    path('register/', RegisterUserView.as_view()),
+    path('activate/<str:activation_code>/', activate_view)
 ]

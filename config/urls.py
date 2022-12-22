@@ -56,7 +56,7 @@ urlpatterns = [
     path('v1/api/genres/', GenreListView.as_view()),
     path('v1/api/add-image/', PosterViewSet.as_view()),
     path('v1/api/', include(router.urls)),
-    path('', include('account.urls')),
+    path('account/', include('account.urls')),
     path('docs/', swagger_view.with_ui('swagger', cache_timeout=0)),
 ]
 if settings.DEBUG:
