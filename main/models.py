@@ -32,5 +32,5 @@ class Video(models.Model):
 
     
     def __str__(self):
-        return self.caption
+        return self.movie
     
