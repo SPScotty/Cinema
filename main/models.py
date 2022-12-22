@@ -12,6 +12,7 @@ class Genre(models.Model):
 class Movie(models.Model):
     uploader = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='uploader')
     title = models.CharField(max_length=200)
+    description = models.TextField(null=True)
     genre = models.ForeignKey(Genre, related_name='movies', on_delete=models.CASCADE)
     year = models.PositiveIntegerField()
     runtime = models.PositiveIntegerField()
