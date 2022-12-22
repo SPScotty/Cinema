@@ -25,4 +25,12 @@ class MoviePoster(models.Model):
     poster = models.ImageField(upload_to='movies', blank=True, null=True)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='images')
 
+class Video(models.Model):
+    caption = models.CharField(max_length=100)
+    video = models.FileField(upload_to="video/%y")
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='videos')
+
+    
+    def __str__(self):
+        return self.caption
     
