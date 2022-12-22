@@ -23,9 +23,9 @@ from rest_framework.routers import DefaultRouter
 
 from main.views import GenreListView, MovieViewSet, PosterViewSet
 
-schema_view = get_schema_view(
+swagger_view = get_schema_view(
     openapi.Info(
-        title="Python 23 API",
+        title="Giga chads",
         description="makers bootcamp",
         default_version="v1",
     ),
@@ -47,6 +47,8 @@ partial-update -> movies/id/ PATCH
 destroy --------> movies/id/ DELETE
 '''
 
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth', include('rest_framework.urls')),
@@ -54,9 +56,14 @@ urlpatterns = [
     path('v1/api/add-image/', PosterViewSet.as_view()),
     path('v1/api/', include(router.urls)),
     path('', include('account.urls')),
+    path('docs/', swagger_view.with_ui('swagger', cache_timeout=0)),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 
 
 
 urlpatterns += static(settings.STATIC_URL, document_root = settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+
+
