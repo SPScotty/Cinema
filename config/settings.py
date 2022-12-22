@@ -137,7 +137,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT=os.path.join(BASE_DIR,"media/")
 
 AUTH_USER_MODEL = 'account.MyUser'
-
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
 
@@ -158,6 +158,17 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
+
+'''SMTP'''
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+DEFAULT_FROM_EMAIL = config('SMTP_EMAIL')
+EMAIL_HOST_USER = config('SMTP_EMAIL')
+EMAIL_HOST_PASSWORD = config('SMTP_PASSWORD')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+ACTIVATE_USERS_EMAIL = True
+''''''
 
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
