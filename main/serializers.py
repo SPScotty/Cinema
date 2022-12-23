@@ -12,14 +12,19 @@ class MovieSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Movie
-        fields = ('id', 'title', 'description', 'genre', 'year', 'runtime', 'cast')
+        fields = '__all__'
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation['images'] = MoviePosterSerializer(instance.images.all(), 
             many=True, context=self.context).data,
-        representation['video'] = VideoSerializer(instance.videos.all(), many = True, context=self.context).data
-        
+        representation['comment'] = CommentSerializer(instance.comment.all(), 
+            many=True, context=self.context).data
+        representation['favorite'] = FavoriteSerializer(instance.favorite.all(), 
+            many=True, context=self.context).data
+        representation['like'] = instance.like.count()
+        representation['rating'] = instance.average_rating
+
         return representation
 
     def create(self, validated_data):
@@ -30,7 +35,66 @@ class MovieSerializer(serializers.ModelSerializer):
         return movie
 
 
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        exclude = ('user',)
 
+    def validate(self, attrs):
+        attrs =  super().validate(attrs)
+        request = self.context.get('request')
+        attrs['user'] = request.user
+
+        return attrs
+        
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favorite
+        exclude = ('user',)
+
+    def validate(self, attrs):
+        attrs =  super().validate(attrs)
+        request = self.context.get('request')
+        attrs['user'] = request.user
+
+        return attrs
+
+   
+
+        
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        exclude = ('user',)
+
+    def validate(self, attrs):
+        attrs =  super().validate(attrs)
+        request = self.context.get('request')
+        attrs['user'] = request.user
+
+        return attrs
+        
+        
+class RatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rating
+        exclude = ('user',)
+
+    def validate(self, attrs):
+        attrs =  super().validate(attrs)
+        request = self.context.get('request')
+        attrs['user'] = request.user
+
+        return attrs
+    
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        del rep['movie']
+        rep['user'] = instance.author.email
+        return rep
+    
 
 
     

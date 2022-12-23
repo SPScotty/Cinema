@@ -39,6 +39,9 @@ router = DefaultRouter()
 router.register('movies', MovieViewSet)
 router.register('genres', GenreViewSet)
 router.register('posters', MoviePosterViewSet)
+router.register('comments',CommentViewSet)
+
+
 
 '''
 create ---------> object/ POST
@@ -54,6 +57,9 @@ destroy --------> object/id/ DELETE
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
+    path('v1/api/likes/', LikeViewSet.as_view()),
+    path('v1/api/rating/', RatingViewSet.as_view()),
+    path('v1/api/favorites/', favourite),
     path('v1/api/', include(router.urls)),
     path('v1/api/account/', include('account.urls')),
     path('docs/', swagger_view.with_ui('swagger', cache_timeout=0)),
