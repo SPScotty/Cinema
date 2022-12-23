@@ -28,13 +28,12 @@ def activate_view(request, activation_code):
     return Response('Вы успешно активировали аккаунт', 200)
 
 
-class LoginView(ObtainAuthToken):
-    serializer_class = LoginSerializer
 
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated, ]
 
     def post(self, request):
+        print(request.data)
         user = request.user
         Token.objects.filter(user=user).delete()
         return Response('Succesfully logged out', status=201)

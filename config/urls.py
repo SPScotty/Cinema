@@ -21,7 +21,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
 
-from main.views import GenreListView, MovieViewSet, PosterViewSet, VideoViewSet
+from main.views import *
 
 swagger_view = get_schema_view(
     openapi.Info(
@@ -37,24 +37,23 @@ swagger_view = get_schema_view(
 
 router = DefaultRouter()
 router.register('movies', MovieViewSet)
+router.register('genres', GenreViewSet)
+router.register('posters', MoviePosterViewSet)
 
 '''
-create ---------> movies/ POST
-list -----------> movies/ GET
-retrieve -------> movies/id/ GET
-update ---------> movies/id/ PUT
-partial-update -> movies/id/ PATCH
-destroy --------> movies/id/ DELETE
+create ---------> object/ POST
+list -----------> object/ GET
+retrieve -------> object/id/ GET
+update ---------> object/id/ PUT
+partial-update -> object/id/ PATCH
+destroy --------> object/id/ DELETE
 '''
 
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api-auth', include('rest_framework.urls')),
-    path('trailers/', VideoViewSet.as_view()),
-    path('v1/api/genres/', GenreListView.as_view()),
-    path('v1/api/add-image/', PosterViewSet.as_view()),
+    path('api-auth/', include('rest_framework.urls')),
     path('v1/api/', include(router.urls)),
     path('v1/api/account/', include('account.urls')),
     path('docs/', swagger_view.with_ui('swagger', cache_timeout=0)),
