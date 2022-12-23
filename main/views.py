@@ -6,12 +6,15 @@ from rest_framework import generics, viewsets, status
 from django.db.models import Q
 from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
+from drf_yasg.utils import swagger_auto_schema
+from django.shortcuts import get_object_or_404
 
 
 
 
-from .models import Genre, Movie, MoviePoster
-from .serializers import GenreSerializer, MovieSerializer, MoviePosterSerializer
+
+from .models import *
+from .serializers import *
 from .permissions import *
 
 
@@ -46,7 +49,7 @@ class MovieViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         '''Переопределим данный метод'''
         if self.action in ['update', 'partial_update', 'destroy', 'create']:
-            permissions= [IsAuthorOrReadOnly,]
+            permissions = [IsAuthorOrReadOnly,]
         else:
             permissions = []
         return [permission() for permission in permissions]
@@ -75,30 +78,56 @@ class MoviePosterViewSet(ModelViewSet):
 
 
 
-# class MovieView(generics.ListCreateAPIView):
-#     queryset = Movie.objects.all()
-#     serializer_class = MovieSerializer
+class LikeViewSet(APIView):
+    permission_classes = [IsAuthenticated, ]
 
-# class MovieDetailView(generics.RetrieveAPIView):
-#     queryset = Movie.objects.all()
-#     serializer_class = MovieSerializer
-
-# class MovieUpdateView(generics.UpdateAPIView):
-#     queryset = Movie.objects.all()
-#     serializer_class = MovieSerializer
-
-# class MovieDeleteView(generics.DestroyAPIView):
-#     queryset = Movie.objects.all()
-#     serializer_class = MovieSerializer
-
-# @api_view(['POST'])
-# def post_movie(request):
-#     print(request.data)
-#     movie = request.data
-#     serializer = MovieSerializer(data=movie)
-#     if serializer.is_valid(raise_exception=True):
-#         post_saved = serializer.save()
-#     return Response(serializer.data)
+    @swagger_auto_schema(request_body=LikeSerializer())
+    def post(self, request):
+        user = request.user
+        ser = LikeSerializer(data=request.data, context={"request":request})
+        ser.is_valid(raise_exception=True)
+        movie_id = request.data.get("movie")
+        if Like.objects.filter(user=user, movie__id=movie_id).exists():
+            raiting = Like.objects.get(user=user, movie__id=movie_id)
+            raiting.value = request.data.get("value")
+            raiting.save()
+        else:
+            ser.save()
+        return Response(status=201)
 
 
+class CommentViewSet(ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = (IsAuthenticated,)
 
+class RatingViewSet(APIView):
+    permission_classes = [IsAuthenticated, ]
+
+    @swagger_auto_schema(request_body=RatingSerializer())
+    def post(self, request):
+        user = request.user
+        ser = RatingSerializer(data=request.data, context={"request":request})
+        ser.is_valid(raise_exception=True)
+        movie_id = request.data.get("movie")
+        if Rating.objects.filter(user=user, movie__id=movie_id).exists():
+            raiting = Rating.objects.get(user=user, movie__id=movie_id)
+            raiting.value = request.data.get("value")
+            raiting.save()
+        else:
+            ser.save()
+        return Response(status=201)
+
+
+@api_view(['POST'])
+def favourite(request):
+    user_id = request.data.get('user')
+    movie_id = request.data.get('movie')
+    user = get_object_or_404(MyUser, id = user_id)
+    movie = get_object_or_404(Movie, id = movie_id)
+
+    if Favorite.objects.filter(movie=movie, user=user).exists():
+        Favorite.objects.filter(movie=movie,user=user).delete()
+    else:
+        Favorite.objects.create(movie=movie,user=user)
+    return Response(status=201)
