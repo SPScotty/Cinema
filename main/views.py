@@ -54,13 +54,15 @@ class MovieViewSet(viewsets.ModelViewSet):
             permissions = []
         return [permission() for permission in permissions]
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['GET'])
     def search(self, request, px=None):
         q = request.query_params.get('q')
         queryset = self.get_queryset()
-        queryser = queryset.filter(Q(title__icontains=q) | Q(description__icontains=q)| Q(genre__slug__icontains=q))
-        serializer = MovieSerializer(queryser, many=True, context={'request':request})
-        return Response(serializer.data, status=status.HTTP_200_OK) 
+        if q:
+            print("JJJJJ")
+            queryset = queryset.filter(Q(title__icontains=q) | Q(description__icontains=q)| Q(genre__slug__icontains=q))
+        serializer = MovieSerializer(queryset, many=True, context={'request':request})
+        return Response(serializer.data, status=207) 
 
 
 
